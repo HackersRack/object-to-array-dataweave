@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2a7eaa37-1c97-4ae5-9ec6-71aab26f6a4c" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="hackersrack-object-to-arrayFlow" doc:id="88670f2c-9ba7-4af4-8388-b37cc0937bed" >
+		<http:listener doc:name="Listener" doc:id="ac36dfa5-d066-4fb3-8ec6-9512715bc344" config-ref="HTTP_Listener_config" path="/convert"/>
+		<ee:transform doc:name="Transform Message" doc:id="19d24be0-469b-4940-af35-e5e737d671e7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var inputObject = {
+   "firstName": "hackers",
+   "secondName": "rack",
+   "profession": "developer(mulesoft)"
+}
+---
+inputObject pluck(value,key) -> {(key):value}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
